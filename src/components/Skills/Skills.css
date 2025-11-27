@@ -78,12 +78,14 @@
   color: #94a3b8;
 }
 
-/* Modern Tabs */
+/* Enhanced Centered Tabs */
 .skills-tabs-container {
   display: flex;
   justify-content: center;
+  align-items: center; /* Added for vertical centering */
   margin-bottom: 4rem;
   position: relative;
+  width: 100%; /* Ensure full width */
 }
 
 .skills-tabs {
@@ -94,6 +96,7 @@
   padding: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  justify-content: center; /* Center tabs within container */
 }
 
 .dark .skills-tabs {
@@ -116,6 +119,7 @@
   gap: 8px;
   position: relative;
   z-index: 1;
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 .dark .skills-tab {
@@ -131,6 +135,18 @@
 
 .dark .skills-tab.active {
   color: white;
+}
+
+/* Hover effects for tabs */
+.skills-tab:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.5);
+  color: #475569;
+  transform: translateY(-2px);
+}
+
+.dark .skills-tab:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
 }
 
 /* Modern Skills Grid */
@@ -346,6 +362,7 @@
   
   .skills-tab {
     justify-content: center;
+    width: 100%; /* Full width tabs on mobile */
   }
   
   .skills-grid {
@@ -373,6 +390,10 @@
   
   .skill-name {
     font-size: 1.25rem;
+  }
+  
+  .skills-tabs-container {
+    margin-bottom: 3rem;
   }
 }
 
