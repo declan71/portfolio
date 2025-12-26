@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Calendar, Github, Linkedin, Youtube, Send } from 'lucide-react';
-import emailjs from '@emailjs/browser';
+import emailjs from '@emailjs/browser/dist/email.min.js';
 import './Contact.css';
 
 export default function Contact() {

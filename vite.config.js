@@ -5,9 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    commonjsOptions: {
-      include: ['@emailjs/browser', /node_modules/]
-    },
     rollupOptions: {
       external: ['@emailjs/browser'],
       output: {
