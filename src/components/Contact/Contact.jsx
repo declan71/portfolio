@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Calendar, Github, Linkedin, Youtube, Send } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import './Contact.css';
 
 export default function Contact() {
@@ -60,16 +61,51 @@ export default function Contact() {
     }
 
     setIsSubmitting(true);
-    
-    // Simulate form submission
+    setErrors({});
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Form submitted:', formData);
+      const serviceId = 'service_u6qztrl';
+      const templateId = 'template_hwuk04w';
+      const publicKey = 'OQFhgwFTA3r6Ab1EK';
+      
+      // Create the template parameters
+      const templateParams = {
+        to_name: 'Declan',
+        from_name: formData.name,
+        from_email: formData.email,
+        message: formData.message,
+        to_email: 'declanokeya@gmail.com'
+      };
+
+      // Send the email using EmailJS
+      const response = await emailjs.send(
+        serviceId,
+        templateId,
+        templateParams,
+        publicKey
+      );
+
+      console.log('Email sent successfully!', response);
+      
+      // Reset form and show success message
       setIsSubmitted(true);
       setFormData({ name: '', email: '', message: '' });
-      setErrors({});
+      
+      // Auto-hide success message after 5 seconds
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
+
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error('EmailJS Error:', {
+        status: error.status,
+        message: error.text || error.message,
+        details: error
+      });
+      
+      setErrors({
+        submit: error.text || 'Failed to send message. Please try again later.'
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -107,7 +143,7 @@ export default function Contact() {
       icon: Phone,
       title: 'Phone',
       content: '+254 117027102',
-      link: 'tel:+254 117027102'
+      link: 'tel:+254117027102'
     },
     {
       icon: MapPin,
@@ -173,9 +209,18 @@ export default function Contact() {
           {/* Contact Form */}
           <motion.div className="contact-form-container" variants={itemVariants}>
             {isSubmitted && (
-              <div className="success-message">
-                Thank you for your message! I'll get back to you soon.
-              </div>
+              <motion.div 
+                className="success-message"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <div className="success-icon">✓</div>
+                <div>
+                  <h4 className="success-title">Message Sent Successfully!</h4>
+                  <p className="success-text">Thank you for your message! I'll get back to you within 24 hours.</p>
+                </div>
+              </motion.div>
             )}
             
             <form onSubmit={handleSubmit}>
@@ -232,21 +277,22 @@ export default function Contact() {
 
               <button
                 type="submit"
-                className="submit-btn"
+                className={`submit-button ${isSubmitting ? 'loading' : ''}`}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                    <div className="button-spinner"></div>
                     Sending...
                   </>
                 ) : (
                   <>
-                    <Send size={18} className="mr-2" />
-                    Send Message
+                    <Send size={18} className="button-icon" />
+                    <span className="button-text">Send Message</span>
                   </>
                 )}
               </button>
+              {errors.submit && <div className="form-error text-center mt-3">{errors.submit}</div>}
             </form>
           </motion.div>
 
@@ -257,10 +303,12 @@ export default function Contact() {
               {contactMethods.map((method, index) => {
                 const IconComponent = method.icon;
                 return (
-                  <motion.div
+                  <motion.a
                     key={method.title}
+                    href={method.link}
                     className="contact-method"
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
                   >
                     <div className="method-icon">
@@ -268,11 +316,9 @@ export default function Contact() {
                     </div>
                     <div className="method-content">
                       <h3>{method.title}</h3>
-                      <a href={method.link} className="method-link">
-                        {method.content}
-                      </a>
+                      <p className="method-link">{method.content}</p>
                     </div>
-                  </motion.div>
+                  </motion.a>
                 );
               })}
             </div>
@@ -303,25 +349,27 @@ export default function Contact() {
             {/* Calendly Booking */}
             <div className="booking-section">
               <h3 className="form-label mb-4">Schedule a Call</h3>
-              <a
-                href="https://calendly.com/declanokeya"
+              <motion.a
+                href="https://calendly.com/declanokeya/30min"
                 className="booking-link"
                 target="_blank"
                 rel="noopener noreferrer"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <Calendar size={18} />
                 Book a Meeting
-              </a>
+              </motion.a>
             </div>
 
             {/* Quick Note */}
             <motion.div
-              className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800"
+              className="quick-note"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              <p className="text-sm text-blue-700 dark:text-blue-300 text-center">
+              <p className="quick-note-text">
                 I typically respond within 24 hours. For urgent matters, feel free to call or schedule a meeting.
               </p>
             </motion.div>
