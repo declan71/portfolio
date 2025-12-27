@@ -6,12 +6,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     rollupOptions: {
-      external: ['@emailjs/browser'],
-      output: {
-        globals: {
-          '@emailjs/browser': 'emailjs'
-        }
-      }
+      // No need to externalize @emailjs/browser
     }
   }
 })
