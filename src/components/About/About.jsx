@@ -8,7 +8,7 @@ import './About.css';
 export default function About() {
   const downloadResume = () => {
     const link = document.createElement('a');
-    link.href = '/resume.pdf';
+    link.href = '/Declan_Okeya_Resume.pdf';
     link.download = 'Declan_Okeya_Resume.pdf';
     link.click();
   };
