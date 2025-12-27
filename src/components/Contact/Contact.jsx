@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Calendar, Github, Linkedin, Youtube, Send } from 'lucide-react';
-import emailjs from '@emailjs/browser/dist/email.min.js';
+import { init, sendForm } from '@emailjs/browser';
 import './Contact.css';
 
 export default function Contact() {
@@ -68,23 +68,11 @@ export default function Contact() {
       const templateId = 'template_hwuk04w';
       const publicKey = 'OQFhgwFTA3r6Ab1EK';
       
-      // Create the template parameters
-      const templateParams = {
-        to_name: 'Declan',
-        from_name: formData.name,
-        from_email: formData.email,
-        message: formData.message,
-        to_email: 'declanokeya@gmail.com'
-      };
-
-      // Send the email using EmailJS
-      const response = await emailjs.send(
-        serviceId,
-        templateId,
-        templateParams,
-        publicKey
-      );
-
+      // Initialize EmailJS
+      init(publicKey);
+      
+      // Send the email using the form element
+      const response = await sendForm(serviceId, templateId, e.target, publicKey);
       console.log('Email sent successfully!', response);
       
       // Reset form and show success message
